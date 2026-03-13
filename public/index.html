@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bluff Arena</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="game-root">
+      <header class="hud">
+        <div class="hud-left">
+          <div class="brand">Bluff Arena</div>
+          <div class="mode">人类 + 3 AI 心理博弈</div>
+        </div>
+        <div class="hud-center">
+          <div id="statusText" class="status-pill">点击「快速开局」开始</div>
+          <div id="gameInfo" class="game-id">未创建对局</div>
+        </div>
+        <div class="hud-right">
+          <button id="btnQuickStart" class="primary">快速开局</button>
+          <button id="btnRematch" class="ghost">再来一局</button>
+        </div>
+      </header>
+
+      <section class="setup-panel" id="setupPanel">
+        <div class="setup-title">AI 阵容配置</div>
+        <div class="setup-grid">
+          <label>你的昵称<input id="humanName" value="Player" /></label>
+          <label>AI1 模型<input id="model1" value="openai-gpt" /></label>
+          <label>AI1 性格
+            <select id="persona1">
+              <option value="stable">稳健</option>
+              <option value="aggressive">激进</option>
+              <option value="loud">嘴硬</option>
+              <option value="quiet">沉默</option>
+            </select>
+          </label>
+          <label>AI2 模型<input id="model2" value="anthropic-claude" /></label>
+          <label>AI2 性格
+            <select id="persona2">
+              <option value="loud">嘴硬</option>
+              <option value="stable">稳健</option>
+              <option value="aggressive">激进</option>
+              <option value="quiet">沉默</option>
+            </select>
+          </label>
+          <label>AI3 模型<input id="model3" value="google-gemini" /></label>
+          <label>AI3 性格
+            <select id="persona3">
+              <option value="aggressive">激进</option>
+              <option value="stable">稳健</option>
+              <option value="loud">嘴硬</option>
+              <option value="quiet">沉默</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="table-stage">
+        <div class="seat top" id="seat-2"></div>
+        <div class="seat left" id="seat-1"></div>
+        <div class="seat right" id="seat-3"></div>
+        <div class="seat bottom" id="seat-0"></div>
+
+        <div class="center-pot">
+          <div class="pot-main" id="centerInfo">等待开局</div>
+          <div id="pileCards" class="pile-cards"></div>
+          <div class="timer-wrap">
+            <span id="timerLabel">倒计时 -</span>
+            <div class="timer-track"><div id="timerBar" class="timer-bar"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel-grid">
+        <aside class="panel chat-panel">
+          <h3>聊天</h3>
+          <div id="chatFeed" class="scroll-view"></div>
+          <div class="chat-input">
+            <input id="chatText" maxlength="60" placeholder="说点心理战术..." />
+            <button id="btnChat">发送</button>
+          </div>
+        </aside>
+        <aside class="panel log-panel">
+          <h3>对局记录</h3>
+          <div id="actionLog" class="scroll-view"></div>
+        </aside>
+      </section>
+
+      <section class="hand-stage">
+        <div class="hand-title">
+          <span>你的手牌（<b id="myHandCount">0</b> 张）</span>
+          <span>当前报点: <b id="claimRankView">-</b></span>
+          <span>已选 <b id="selectedCount">0</b> 张</span>
+        </div>
+        <div id="handCards" class="hand-cards"></div>
+        <div class="action-bar">
+          <button id="btnHint" class="ghost">提示</button>
+          <button id="btnPlay" class="primary">出牌</button>
+          <button id="btnChallenge" class="warn">质疑</button>
+          <button id="btnPassChallenge" class="ghost">不质疑</button>
+        </div>
+      </section>
+
+      <section class="panel debug-panel">
+        <h3>调试状态</h3>
+        <pre id="stateView"></pre>
+      </section>
+    </main>
+
+    <section id="resultModal" class="modal hidden">
+      <div class="modal-card">
+        <h2 id="resultTitle">本局结束</h2>
+        <p id="resultDesc"></p>
+        <div class="modal-actions">
+          <button id="btnHideModal" class="ghost">关闭</button>
+          <button id="btnModalRematch" class="primary">再来一局</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="guideModal" class="modal">
+      <div class="modal-card">
+        <h2>操作引导</h2>
+        <p>1. 点「快速开局」创建并开始。</p>
+        <p>2. 到你回合时，点击手牌选择 1-4 张。</p>
+        <p>3. 点「出牌」；在质疑阶段可点「质疑」。</p>
+        <div class="modal-actions">
+          <button id="btnGuideClose" class="primary">我知道了</button>
+        </div>
+      </div>
+    </section>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/main.js"></script>
+  </body>
+</html>

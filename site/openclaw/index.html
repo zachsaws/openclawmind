@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>当所有人都在谈论 OpenClaw，我们在谈论什么</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-dark: #060913;
+        --surface-card: #0c1222;
+        --border-color: #1e293b;
+        --accent-red: #ff4f4f;
+        --text-main: #ffffff;
+        --text-muted: #8b949e;
+        --font-main: "Inter", system-ui, -apple-system, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+        font-family: var(--font-main);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 60px;
+        padding: 60px 20px;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+        background-image:
+          radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.5) 100%, transparent),
+          radial-gradient(1px 1px at 30% 60%, rgba(255, 255, 255, 0.4) 100%, transparent),
+          radial-gradient(1.5px 1.5px at 70% 30%, rgba(255, 255, 255, 0.6) 100%, transparent),
+          radial-gradient(1px 1px at 80% 80%, rgba(255, 255, 255, 0.3) 100%, transparent),
+          radial-gradient(2px 2px at 50% 50%, rgba(255, 255, 255, 0.2) 100%, transparent);
+        background-size: 100% 100%;
+        background-attachment: fixed;
+      }
+
+      .slide-container {
+        background-color: transparent;
+        width: 100%;
+        max-width: 1100px;
+        min-height: 618px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: 50px 60px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: radial-gradient(circle at 50% 0%, rgba(255, 79, 79, 0.05) 0%, var(--bg-dark) 60%);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      }
+
+      .slide-content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+      }
+
+      .top-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: absolute;
+        top: 40px;
+        left: 60px;
+        z-index: 10;
+      }
+
+      .top-brand span {
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: -0.5px;
+      }
+
+      .top-brand .slide-number {
+        color: var(--text-muted);
+        font-size: 14px;
+        margin-left: 20px;
+        font-weight: 500;
+      }
+
+      .oc-logo {
+        width: 40px;
+        height: 40px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.3;
+        letter-spacing: -0.02em;
+      }
+
+      h1 {
+        font-size: 64px;
+        font-weight: 800;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      h2.section-title {
+        font-size: 40px;
+        font-weight: 700;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      h2.section-title::before {
+        content: ">";
+        color: var(--accent-red);
+        font-weight: 800;
+      }
+
+      p {
+        font-size: 18px;
+        line-height: 1.7;
+        color: var(--text-muted);
+      }
+
+      .highlight-red {
+        color: var(--accent-red);
+      }
+
+      .subtitle-caps {
+        color: var(--accent-red);
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .pill-badge {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 99px;
+        padding: 6px 16px 6px 6px;
+        font-size: 14px;
+        color: var(--text-muted);
+        margin-bottom: 24px;
+        width: fit-content;
+      }
+
+      .pill-badge.center {
+        margin: 0 auto 30px auto;
+      }
+
+      .pill-badge .new-tag {
+        background-color: var(--accent-red);
+        color: white;
+        padding: 2px 10px;
+        border-radius: 99px;
+        font-weight: 600;
+        font-size: 12px;
+        margin-right: 12px;
+        text-transform: uppercase;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: stretch;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 24px;
+        align-items: stretch;
+      }
+
+      .split-layout {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 60px;
+        align-items: center;
+      }
+
+      .oc-card {
+        background: linear-gradient(180deg, rgba(30, 41, 59, 0.4) 0%, rgba(12, 18, 34, 0.6) 100%);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 30px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .oc-card h3 {
+        font-size: 24px;
+        color: var(--text-main);
+        margin-bottom: 16px;
+        font-weight: 600;
+      }
+
+      .oc-card p {
+        font-size: 16px;
+        margin-bottom: 0;
+        flex-grow: 1;
+      }
+
+      .quote-box {
+        border-left: 4px solid var(--accent-red);
+        padding-left: 30px;
+        margin: 20px 0;
+      }
+
+      .quote-box p.big-quote {
+        font-size: 32px;
+        color: var(--text-main);
+        font-weight: 500;
+        line-height: 1.5;
+        margin-bottom: 10px;
+      }
+
+      .profile-line {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: #2d3748;
+        border: 1px solid #4a5568;
+      }
+
+      .username {
+        font-size: 14px;
+        color: var(--accent-red);
+      }
+
+      .timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .timeline-item {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      .timeline-year {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--accent-red);
+        width: 80px;
+        flex-shrink: 0;
+        padding-top: 2px;
+      }
+
+      .center-content {
+        align-items: center;
+        text-align: center;
+      }
+
+      @media (max-width: 960px) {
+        body {
+          padding: 24px 12px;
+          gap: 24px;
+        }
+
+        .slide-container {
+          min-height: auto;
+          padding: 28px 22px;
+        }
+
+        .top-brand {
+          position: static;
+          margin-bottom: 20px;
+        }
+
+        .slide-content {
+          padding-top: 0 !important;
+        }
+
+        .grid-2,
+        .grid-3,
+        .split-layout {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        h1 {
+          font-size: 42px;
+        }
+
+        h2.section-title {
+          font-size: 28px;
+          margin-bottom: 24px;
+        }
+
+        .quote-box p.big-quote {
+          font-size: 24px !important;
+        }
+
+        p {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <svg style="display: none">
+      <defs>
+        <symbol id="openclaw-mascot" viewBox="0 0 100 100">
+          <ellipse cx="50" cy="50" rx="32" ry="28" fill="#ff4f4f" />
+          <circle cx="38" cy="42" r="4.5" fill="#000" />
+          <circle cx="62" cy="42" r="4.5" fill="#000" />
+          <path d="M 18 55 Q 5 45 12 35" fill="none" stroke="#ff4f4f" stroke-width="8" stroke-linecap="round" />
+          <path d="M 82 55 Q 95 45 88 35" fill="none" stroke="#ff4f4f" stroke-width="8" stroke-linecap="round" />
+          <rect x="35" y="75" width="8" height="12" rx="4" fill="#ff4f4f" />
+          <rect x="57" y="75" width="8" height="12" rx="4" fill="#ff4f4f" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <div class="slide-container" style="justify-content: center">
+      <div class="slide-content center-content" style="margin-top: -30px">
+        <svg class="oc-logo" style="width: 100px; height: 100px; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(255, 79, 79, 0.4))">
+          <use href="#openclaw-mascot"></use>
+        </svg>
+        <h1>OpenClaw</h1>
+        <div class="subtitle-caps">THE AI THAT ACTUALLY DOES THINGS.</div>
+        <p style="font-size: 24px; color: var(--text-main); max-width: 800px; margin-top: 30px; line-height: 1.5; font-weight: 500">
+          当所有人都在谈论 OpenClaw，我们在谈论什么？
+        </p>
+        <p style="font-size: 18px; margin-top: 15px">一个非技术者的观察与思考</p>
+        <div class="pill-badge center" style="margin-top: 50px">
+          <span class="new-tag">START</span> Swipe to read the observations &rarr;
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-container">
+      <div class="top-brand">
+        <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
+        <span>OpenClaw</span>
+        <span class="slide-number">01 / 开场</span>
+      </div>
+      <div class="slide-content" style="padding-top: 60px">
+        <h2 class="section-title">那些刷屏的新闻背后</h2>
+        <div class="grid-3">
+          <div class="oc-card">
+            <h3>Block 裁员 40%</h3>
+            <p>理由是 AI 效率提升。裁员公布后股价反涨超 20%。最讽刺的是，连积极推广核心 AI 项目 Goose 的高级工程师也未能幸免。</p>
+            <div class="profile-line">
+              <div class="avatar"></div>
+              <span class="username">@goose_engineer</span>
+            </div>
+          </div>
+          <div class="oc-card">
+            <h3>GitHub 历史第一</h3>
+            <p>2026 年 3 月，超越 React 成为有史以来星标最多的项目。这意味着全球十几万开发者正在用它来帮自己做事。</p>
+            <div class="profile-line">
+              <div class="avatar" style="background: #ff4f4f"></div>
+              <span class="username">@developer_community</span>
+            </div>
+          </div>
+          <div class="oc-card">
+            <h3>排队与“龙虾十条”</h3>
+            <p>腾讯大厦门口排起近千人长队。随后深圳龙岗区政府发布了全国第一个针对 OpenClaw 智能体的专项区级政策。</p>
+            <div class="profile-line">
+              <div class="avatar"></div>
+              <span class="username">@shenzhen_news</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-container">
+      <div class="top-brand">
+        <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
+        <span>OpenClaw</span>
+        <span class="slide-number">02 / 提问</span>
+      </div>
+      <div class="slide-content center-content">
+        <div class="pill-badge center">
+          <span class="new-tag">QUESTION</span> The Core Question
+        </div>
+        <div style="max-width: 800px; text-align: left; margin: 0 auto">
+          <p style="font-size: 28px; color: var(--text-main); line-height: 1.6; text-align: center">
+            “这三条消息放在一起，意味着这次真的不一样了。<br />但这些消息让你感受到的，<br />是兴奋，还是焦虑？”
+          </p>
+          <div class="oc-card" style="margin-top: 50px; text-align: center; border-color: rgba(255, 79, 79, 0.4); background: rgba(255, 79, 79, 0.05)">
+            <p style="font-size: 24px; color: var(--accent-red); font-weight: 600">我的感受是：焦虑。</p>
+            <p style="font-size: 20px; color: white; margin-top: 15px">因为这些消息背后藏着同一个问题：<br />这场变革，会把我甩多远？</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-container">
+      <div class="top-brand">
+        <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
+        <span>OpenClaw</span>
+        <span class="slide-number">03 / 故事一</span>
+      </div>
+      <div class="slide-content split-layout" style="padding-top: 60px">
+        <div>
+          <h2 class="section-title">一场被推迟的<br />技术革命</h2>
+          <div class="quote-box">
+            <p class="big-quote">2016 年 AlphaGo 击败李世石。</p>
+            <p>那时的 AI 再厉害，也和普通人没关系。它能下棋，但不能帮你做 PPT。它是实验室里的明星，但不是普通人工作中的伙伴。</p>
+          </div>
+        </div>
+        <div class="oc-card" style="padding: 40px">
+          <svg class="oc-logo" style="width: 60px; height: 60px; margin-bottom: 20px"><use href="#openclaw-mascot"></use></svg>
+          <h3 style="font-size: 32px; color: var(--accent-red)">但 OpenClaw 不一样。</h3>
+          <p style="font-size: 20px; color: white; line-height: 1.6; margin-top: 20px">
+            它不是那个只会陪你聊天的机器人。<br /><br />
+            它是那个会帮你打开浏览器、登录网站、填写表单、发送邮件的——<br />
+            <strong style="color: var(--accent-red); font-size: 28px; display: block; margin-top: 10px">数字员工。</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-container">
+      <div class="top-brand">
+        <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
+        <span>OpenClaw</span>
+        <span class="slide-number">04 / 两个信号</span>
+      </div>
+      <div class="slide-content" style="padding-top: 60px">
+        <h2 class="section-title">我看到的两个关键信号</h2>
+        <div class="grid-2" style="margin-top: 20px">
+          <div class="oc-card">
+            <div class="pill-badge" style="margin-bottom: 20px">
+              <span class="new-tag">SIGNAL 1</span> 大厂 All in
+            </div>
+            <h3 style="font-size: 28px">真金白银的投入</h3>
+            <p style="font-size: 18px; margin-top: 15px">Anthropic 推出 Claude Code，OpenAI 推出 Codex，Cursor 快速崛起。</p>
+            <p style="font-size: 18px; color: white; margin-top: 20px; font-weight: 500">为什么？因为他们看到了一件事：这次 AI 不是工具，而是员工。</p>
+          </div>
+          <div class="oc-card">
+            <div class="pill-badge" style="margin-bottom: 20px">
+              <span class="new-tag">SIGNAL 2</span> 生态长出
+            </div>
+            <h3 style="font-size: 28px">日常应用悄悄支持</h3>
+            <p style="font-size: 18px; margin-top: 15px">很多日常应用开始支持 OpenClaw，不是因为想蹭热度，而是因为必须这么做。</p>
+            <p style="font-size: 18px; color: white; margin-top: 20px; font-weight: 500">就像当年企业必须拥抱互联网。这次，不是选择题，而是生存题。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-container">
+      <div class="top-brand">
+        <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
+        <span>OpenClaw</span>
+        <span class="slide-number">05 / 故事二</span>
+      </div>
+      <div class="slide-content" style="padding-top: 60px">
+        <h2 class="section-title">弥漫在社会切面中的焦虑</h2>
+        <div class="grid-2" style="gap: 20px">
+          <div class="oc-card" style="padding: 24px">
+            <h3 style="color: var(--accent-red); font-size: 22px">1. 创业者：找不到北</h3>
+            <p>“环境永远配不对，场景永远找不到。”试了各种工具，却永远差一点。感觉就像：知道未来要变，但不知道该往哪里变。</p>
+          </div>
+          <div class="oc-card" style="padding: 24px">
+            <h3 style="color: var(--accent-red); font-size: 22px">2. 大企业：转型恐慌</h3>
+            <p>不是担心被颠覆，而是担心被同行超越。原有的团队和利益格局阻止了快速转向。想动，但动不了。</p>
+          </div>
+          <div class="oc-card" style="padding: 24px">
+            <h3 style="color: var(--accent-red); font-size: 22px">3. 投资人：不确定性</h3>
+            <p>赛道公司太多，投对盆满钵满，投错血本无归。不投又怕错过时代，这种不确定性让人夜不能寐。</p>
+          </div>
+          <div class="oc-card" style="padding: 24px">
+            <h3 style="color: var(--accent-red); font-size: 22px">4. 打工者：替代恐慌</h3>
+            <p>最直接的问题：我的岗位会被替代吗？新的岗位在哪里？我需要学什么才能不被淘汰？</p>
+          </div>
+        </div>
+        <div class="pill-badge center" style="margin-top: 25px">
+          <span class="new-tag">INSIGHT</span> 不是 AI 太强大，而是我们不知道它在哪里强大。
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-container">
+      <div class="top-brand">
+        <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
+        <span>OpenClaw</span>
+        <span class="slide-number">06 / 故事三</span>
+      </div>
+      <div class="slide-content split-layout" style="padding-top: 60px">
+        <div>
+          <h2 class="section-title">历史告诉我们的规律</h2>
+          <p style="font-size: 20px; color: white; margin-bottom: 20px">每次重大技术变革，都会消灭旧岗位，但同时会创造更多新岗位。这不是鸡汤，是历史事实。</p>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">1815</div>
+            <div>
+              <h4 style="color: white; font-size: 18px; margin-bottom: 5px">第一次工业革命</h4>
+              <p style="font-size: 16px">蒸汽机取代手工作坊。整体财富增加，催生机器操作工、铁路工人。</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1900</div>
+            <div>
+              <h4 style="color: white; font-size: 18px; margin-bottom: 5px">第二次工业革命</h4>
+              <p style="font-size: 16px">汽车取代马车。催生石油、物流、维修等几十个新产业。</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1995</div>
+            <div>
+              <h4 style="color: white; font-size: 18px; margin-bottom: 5px">信息技术革命</h4>
+              <p style="font-size: 16px">互联网冲击传统零售与媒体。程序员、产品经理、电商运营爆发。</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2007</div>
+            <div>
+              <h4 style="color: white; font-size: 18px; margin-bottom: 5px">移动互联网</h4>
+              <p style="font-size: 16px">智能手机普及。移动开发、内容创作、数字营销崛起。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-container">
+      <div class="top-brand">
+        <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
+        <span>OpenClaw</span>
+        <span class="slide-number">07 / 核心差异</span>
+      </div>
+      <div class="slide-content center-content">
+        <h2 class="section-title" style="justify-content: center; margin-bottom: 50px">差异到底在哪里？</h2>
+        <div class="quote-box" style="border-left: none; text-align: center; max-width: 900px">
+          <p class="big-quote" style="font-size: 36px; margin-bottom: 30px">
+            “差异不在于你会不会用工具，<br />而在于你<strong class="highlight-red">能不能看到新场景</strong>。”
+          </p>
+          <p style="font-size: 20px; line-height: 1.8">
+            历史上那些最早受益的人，不是最懂技术的，而是最先看到新需求并去尝试的人。<br />
+            九十年代第一批做电商的，不是程序员，而是那些在传统零售活不下去找出路的人。<br /><br />
+            <strong style="color: white">OpenClaw 来了，新岗位一定会出现。关键是你能不能早一步看到它。</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-container">
+      <div class="top-brand">
+        <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
+        <span>OpenClaw</span>
+        <span class="slide-number">08 / 机会一</span>
+      </div>
+      <div class="slide-content split-layout" style="padding-top: 60px">
+        <div>
+          <div class="pill-badge" style="margin-bottom: 20px">
+            <span class="new-tag">OPP 01</span> 确定性机会
+          </div>
+          <h2 style="font-size: 48px; font-weight: 800; color: white; margin-bottom: 20px">主动拥抱的人</h2>
+          <h3 style="font-size: 24px; color: var(--accent-red); margin-bottom: 30px">传统企业的 AI 转型服务</h3>
+          <p style="font-size: 18px; margin-bottom: 20px">老李的行业研究工作被 AI 替代，但他发现：抛开北上广深，大量传统企业想用 AI 但不知道怎么用。</p>
+          <p style="font-size: 18px">他利用人脉和新学的 AI 技能，做“AI 转型咨询”，帮中小企业诊断落地。半年赚了过去两年的钱。</p>
+        </div>
+        <div class="oc-card center-content" style="padding: 50px 30px; justify-content: center">
+          <p style="font-size: 28px; color: white; font-weight: 600; line-height: 1.5">
+            “帮别人上岸的人，<br />
+            <span style="color: var(--accent-red)">自己先上岸。</span>”
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-container">
+      <div class="top-brand">
+        <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
+        <span>OpenClaw</span>
+        <span class="slide-number">09 / 机会二</span>
+      </div>
+      <div class="slide-content split-layout" style="padding-top: 60px">
+        <div>
+          <div class="pill-badge" style="margin-bottom: 20px">
+            <span class="new-tag">OPP 02</span> 确定性机会
+          </div>
+          <h2 style="font-size: 48px; font-weight: 800; color: white; margin-bottom: 20px">把自己变成一支队伍</h2>
+          <h3 style="font-size: 24px; color: var(--accent-red); margin-bottom: 30px">AI 驱动的知识服务</h3>
+          <p style="font-size: 18px; margin-bottom: 20px">小周一个人加上 AI，成立工作室，帮中小品牌做情报分析和脚本生成。她一个人就相当于一个团队，且比大公司便宜。</p>
+          <p style="font-size: 18px">但很多人学会了工具却赚不到钱。为什么？因为核心是知道解决谁的痛点。</p>
+        </div>
+        <div class="oc-card center-content" style="padding: 50px 30px; justify-content: center">
+          <p style="font-size: 24px; color: white; font-weight: 500; line-height: 1.6">
+            工具只是<strong style="color: var(--accent-red)">放大器</strong>，<br />它能放大你的能力，<br />但无法创造你的能力。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-container">
+      <div class="top-brand">
+        <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
+        <span>OpenClaw</span>
+        <span class="slide-number">10 / 机会三</span>
+      </div>
+      <div class="slide-content split-layout" style="padding-top: 60px">
+        <div>
+          <div class="pill-badge" style="margin-bottom: 20px">
+            <span class="new-tag">OPP 03</span> 确定性机会
+          </div>
+          <h2 style="font-size: 44px; font-weight: 800; color: white; margin-bottom: 20px">被逼到绝路的转型</h2>
+          <h3 style="font-size: 24px; color: var(--accent-red); margin-bottom: 30px">传统产业的 AI 赋能</h3>
+          <p style="font-size: 18px; margin-bottom: 20px">五金厂王总面临下游用 AI 询价的降维打击。不改就是等死。他主动找 AI 公司合作，把厂里老师傅的手艺变成 AI 模型。</p>
+          <p style="font-size: 18px">不仅辅助了厂里的新手上岗，还把模型卖给同行。</p>
+        </div>
+        <div class="oc-card center-content" style="padding: 50px 30px; justify-content: center">
+          <p style="font-size: 28px; color: white; font-weight: 600; line-height: 1.5">
+            当你被逼到绝路时，<br />往往就是<strong style="color: var(--accent-red)">最大的机会</strong>。
+          </p>
+          <p style="font-size: 18px; margin-top: 20px">因为你已经没有什么可以失去的了，<br />剩下的都是得到。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-container">
+      <div class="top-brand">
+        <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
+        <span>OpenClaw</span>
+        <span class="slide-number">11 / 最后的话</span>
+      </div>
+      <div class="slide-content center-content">
+        <svg class="oc-logo" style="width: 80px; height: 80px; margin-bottom: 30px; filter: drop-shadow(0 0 30px rgba(255, 79, 79, 0.5))">
+          <use href="#openclaw-mascot"></use>
+        </svg>
+        <h2 style="font-size: 48px; color: white; font-weight: 800; margin-bottom: 30px">大迁徙</h2>
+        <div class="quote-box" style="border-left: none; max-width: 800px">
+          <p class="big-quote" style="font-size: 28px; line-height: 1.6; margin-bottom: 40px">
+            “角马为什么要迁徙？<br />因为水草不再丰美，停在原地不是坚守，而是一种错付。”
+          </p>
+          <p style="font-size: 24px; color: var(--accent-red); font-weight: 600">
+            当变革来临，重要的不是停留在原地焦虑，<br />而是纵身跃入新的河流。
+          </p>
+          <p style="font-size: 18px; color: var(--text-muted); margin-top: 50px">谢谢大家。</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

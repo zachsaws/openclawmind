@@ -1,0 +1,1 @@
+/Users/tianxiang/vibe code/算力冗余/deliverables/2026-03-04-ai-heat-task-definition/wechat-final.md
