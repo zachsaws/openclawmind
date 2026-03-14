@@ -332,73 +332,6 @@
             animation: chapterCardIn 2.4s ease forwards;
         }
 
-        .lower-third {
-            position: absolute;
-            left: 24px;
-            right: auto;
-            bottom: 24px;
-            z-index: 4;
-            display: grid;
-            gap: 5px;
-            min-width: min(360px, calc(100% - 48px));
-            padding: 12px 16px 11px;
-            border-radius: 18px;
-            background:
-                linear-gradient(135deg, rgba(7, 10, 20, 0.82), rgba(7, 10, 20, 0.52)),
-                radial-gradient(circle at top left, var(--chapter-glow), transparent 42%);
-            border: 1px solid rgba(255,255,255,0.14);
-            backdrop-filter: blur(18px);
-            box-shadow: 0 20px 54px rgba(0,0,0,0.34);
-            overflow: hidden;
-        }
-
-        .lower-third::before {
-            content: "";
-            position: absolute;
-            inset: 0 auto 0 0;
-            width: 3px;
-            background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 40%, white));
-            box-shadow: 0 0 26px var(--chapter-glow-strong);
-        }
-
-        .lower-third::after {
-            content: "";
-            position: absolute;
-            inset: auto 0 0 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent), transparent 65%);
-            transform-origin: left center;
-            animation: lowerThirdBar 4.4s ease-in-out infinite;
-        }
-
-        .lower-third-kicker {
-            color: #ffb1b1;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            font-weight: 700;
-        }
-
-        .lower-third-title {
-            font-size: clamp(18px, 1.9vw, 24px);
-            line-height: 1.04;
-            letter-spacing: -0.04em;
-            font-weight: 800;
-            max-width: 18ch;
-        }
-
-        .lower-third-meta {
-            color: var(--muted);
-            font-size: 12px;
-            line-height: 1.4;
-            max-width: 34ch;
-        }
-
-        @keyframes lowerThirdBar {
-            0%, 100% { transform: scaleX(0.18); opacity: 0.7; }
-            50% { transform: scaleX(1); opacity: 1; }
-        }
-
         .chapter-transition small {
             color: #ff9f9f;
             font-size: 11px;
@@ -641,28 +574,6 @@
             min-height: 0;
         }
 
-        .viewer.is-fullscreen .lower-third {
-            left: 20px;
-            bottom: 20px;
-            min-width: min(320px, calc(100% - 40px));
-            padding: 10px 14px 10px;
-            gap: 4px;
-            border-radius: 16px;
-            background:
-                linear-gradient(135deg, rgba(7, 10, 20, 0.72), rgba(7, 10, 20, 0.42)),
-                radial-gradient(circle at top left, var(--chapter-glow), transparent 42%);
-        }
-
-        .viewer.is-fullscreen .lower-third-title {
-            font-size: clamp(16px, 1.5vw, 22px);
-            max-width: 16ch;
-        }
-
-        .viewer.is-fullscreen .lower-third-meta {
-            font-size: 11px;
-            max-width: 28ch;
-        }
-
         .now-playing {
             display: grid;
             gap: 4px;
@@ -825,22 +736,6 @@
                 font-size: 34px;
             }
 
-            .lower-third {
-                left: 16px;
-                right: 16px;
-                min-width: 0;
-                bottom: 16px;
-                padding: 10px 12px 10px;
-                gap: 4px;
-            }
-
-            .lower-third-title {
-                font-size: 18px;
-            }
-
-            .lower-third-meta {
-                font-size: 11px;
-            }
         }
     </style>
 </head>
@@ -873,12 +768,6 @@
                     <strong id="chapterTransitionTitle">封面</strong>
                     <span id="chapterTransitionMeta">OpenClaw / 开场命题</span>
                 </div>
-                <div class="lower-third" id="lowerThird">
-                    <div class="lower-third-kicker" id="lowerThirdKicker">Chapter 01</div>
-                    <div class="lower-third-title" id="lowerThirdTitle">封面</div>
-                    <div class="lower-third-meta" id="lowerThirdMeta">OpenClaw / 开场命题</div>
-                </div>
-
                 <div class="hero-overlay" id="heroOverlay">
                     <div class="hero-card">
                         <div class="eyebrow" style="justify-self:center;">OpenClaw / Audio Essay</div>
@@ -1001,9 +890,6 @@
         const chapterTransitionIndex = document.getElementById('chapterTransitionIndex');
         const chapterTransitionTitle = document.getElementById('chapterTransitionTitle');
         const chapterTransitionMeta = document.getElementById('chapterTransitionMeta');
-        const lowerThirdKicker = document.getElementById('lowerThirdKicker');
-        const lowerThirdTitle = document.getElementById('lowerThirdTitle');
-        const lowerThirdMeta = document.getElementById('lowerThirdMeta');
         const chapterList = document.getElementById('chapterList');
         const currentChapterTitle = document.getElementById('currentChapterTitle');
         const currentChapterMeta = document.getElementById('currentChapterMeta');
@@ -1122,9 +1008,6 @@
             const chapter = chapters[currentSlide] || chapters[0];
             currentChapterTitle.textContent = chapter.title;
             currentChapterMeta.textContent = chapter.label;
-            lowerThirdKicker.textContent = `Chapter ${String(currentSlide + 1).padStart(2, '0')}`;
-            lowerThirdTitle.textContent = chapter.title;
-            lowerThirdMeta.textContent = chapter.label;
             slideStatus.textContent = `第 ${currentSlide + 1} / ${chapters.length} 页`;
             applyChapterTheme(currentSlide);
             applyCameraPreset(currentSlide);
