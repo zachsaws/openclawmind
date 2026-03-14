@@ -249,19 +249,19 @@
                 <h2>翻页时间轴</h2>
                 <textarea id="cuePoints">[
   0,
-  17,
-  39,
-  68,
-  98,
-  126,
-  154,
-  184,
-  215,
-  248,
-  280,
-  312
+  15,
+  105,
+  136,
+  211,
+  286,
+  391,
+  491,
+  551,
+  646,
+  741,
+  840
 ]</textarea>
-                <p class="hint">这里是一页对应一个切换时间点，单位是秒。第一个必须是 0，一共 12 个数字，对应 12 页。</p>
+                <p class="hint">这里是一页对应一个切换时间点，单位是秒。第一个必须是 0，一共 12 个数字，对应 12 页。当前默认值已经按这条 15 分 27 秒的播客重排过一版。</p>
             </div>
 
             <div class="group">
@@ -294,6 +294,9 @@
         const currentSlideNumber = document.getElementById('currentSlideNumber');
         const audioState = document.getElementById('audioState');
         const defaultAudioUrl = '../assets/openclaw-podcast.mp3';
+        const cueStorageKey = 'openclawPodcastCues';
+        const cueVersionKey = 'openclawPodcastCuesVersion';
+        const currentCueVersion = 'v2-20260314';
 
         let cues = [];
         let currentSlide = 0;
@@ -317,7 +320,8 @@
                     throw new Error('invalid');
                 }
                 cues = parsed.map((item) => Number(item)).filter((item) => !Number.isNaN(item));
-                localStorage.setItem('openclawPodcastCues', JSON.stringify(cues));
+                localStorage.setItem(cueStorageKey, JSON.stringify(cues));
+                localStorage.setItem(cueVersionKey, currentCueVersion);
                 return true;
             } catch (error) {
                 alert('翻页时间轴格式不对，请使用 JSON 数组，例如 [0, 12, 30]');
@@ -359,7 +363,8 @@
         }
 
         iframe.addEventListener('load', () => {
-            const savedCues = localStorage.getItem('openclawPodcastCues');
+            const savedCueVersion = localStorage.getItem(cueVersionKey);
+            const savedCues = savedCueVersion === currentCueVersion ? localStorage.getItem(cueStorageKey) : null;
             const savedAudioUrl = localStorage.getItem('openclawPodcastAudioUrl');
             if (savedCues) cuePointsInput.value = savedCues;
             audioUrlInput.value = savedAudioUrl || defaultAudioUrl;
