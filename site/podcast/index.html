@@ -293,6 +293,7 @@
         const slideStatus = document.getElementById('slideStatus');
         const currentSlideNumber = document.getElementById('currentSlideNumber');
         const audioState = document.getElementById('audioState');
+        const defaultAudioUrl = '../assets/openclaw-podcast.mp3';
 
         let cues = [];
         let currentSlide = 0;
@@ -361,9 +362,9 @@
             const savedCues = localStorage.getItem('openclawPodcastCues');
             const savedAudioUrl = localStorage.getItem('openclawPodcastAudioUrl');
             if (savedCues) cuePointsInput.value = savedCues;
-            if (savedAudioUrl) audioUrlInput.value = savedAudioUrl;
+            audioUrlInput.value = savedAudioUrl || defaultAudioUrl;
             parseCuePoints();
-            if (savedAudioUrl) loadAudioFromUrl(savedAudioUrl);
+            loadAudioFromUrl(audioUrlInput.value);
             const controller = getController();
             if (controller) {
                 controller.showSlide(0);
