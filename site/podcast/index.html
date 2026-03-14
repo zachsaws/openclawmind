@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw 播客视频版</title>
+    <style>
+        :root {
+            --bg: #060913;
+            --panel: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent: #ff4f4f;
+            --accent-soft: rgba(255, 79, 79, 0.16);
+            --text: #ffffff;
+            --muted: #97a0ad;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Inter, system-ui, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top, rgba(255, 79, 79, 0.12), transparent 32%),
+                linear-gradient(180deg, #060913 0%, #0a1020 100%);
+            padding: 20px;
+        }
+
+        .app {
+            width: min(1400px, 100%);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 360px;
+            gap: 20px;
+        }
+
+        .stage {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            min-height: calc(100vh - 40px);
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            backdrop-filter: blur(12px);
+        }
+
+        .stage-header,
+        .control-panel {
+            padding: 18px 20px;
+        }
+
+        .stage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stage-header h1 {
+            font-size: 22px;
+            letter-spacing: -0.03em;
+        }
+
+        .meta {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background: #060913;
+        }
+
+        .transport {
+            display: grid;
+            gap: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .timeline {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .timeline-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent), #ff8b8b);
+        }
+
+        .transport-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button, input, textarea {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+            border-radius: 999px;
+            background: var(--panel);
+            color: var(--text);
+            padding: 11px 16px;
+            cursor: pointer;
+        }
+
+        button.primary {
+            background: var(--accent);
+        }
+
+        button:hover {
+            filter: brightness(1.05);
+        }
+
+        .control-panel {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            display: grid;
+            gap: 16px;
+            align-content: start;
+            min-height: calc(100vh - 40px);
+        }
+
+        .group {
+            display: grid;
+            gap: 8px;
+        }
+
+        .group h2 {
+            font-size: 16px;
+        }
+
+        .group p,
+        .hint {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .field,
+        textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: var(--text);
+            padding: 12px 14px;
+        }
+
+        textarea {
+            min-height: 144px;
+            resize: vertical;
+        }
+
+        .status-card {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px;
+            background: rgba(255,255,255,0.02);
+            display: grid;
+            gap: 8px;
+        }
+
+        .status-card strong {
+            font-size: 28px;
+        }
+
+        .status-card small {
+            color: var(--muted);
+        }
+
+        .status-card span {
+            color: #ff9b9b;
+            font-weight: 700;
+        }
+
+        @media (max-width: 1100px) {
+            .app {
+                grid-template-columns: 1fr;
+            }
+
+            .stage,
+            .control-panel {
+                min-height: auto;
+            }
+
+            .stage {
+                height: 80vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <section class="stage">
+            <header class="stage-header">
+                <div>
+                    <h1>OpenClaw 播客视频版</h1>
+                    <div class="meta">音频驱动自动翻页。先加载音频，再点击开始播放。</div>
+                </div>
+                <div class="meta" id="slideStatus">第 1 / 12 页</div>
+            </header>
+
+            <iframe id="slideFrame" src="../openclaw/"></iframe>
+
+            <div class="transport control-panel" style="min-height:auto;border:0;border-top:1px solid var(--border);border-radius:0;background:transparent;">
+                <div class="timeline"><div class="timeline-fill" id="timelineFill"></div></div>
+                <div class="transport-row">
+                    <div class="controls">
+                        <button class="primary" id="startBtn">开始播放</button>
+                        <button id="pauseBtn">暂停</button>
+                        <button id="restartBtn">从头开始</button>
+                    </div>
+                    <div class="meta" id="timeStatus">00:00 / 00:00</div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="control-panel">
+            <div class="group">
+                <h2>音频来源</h2>
+                <input class="field" id="audioUrl" placeholder="填入音频 URL，或用下方选择本地音频">
+                <input class="field" id="audioFile" type="file" accept="audio/*">
+                <p class="hint">如果以后你把音频也放进这个 GitHub 仓库，可以直接填相对地址，比如 `../assets/openclaw-podcast.mp3`。</p>
+            </div>
+
+            <div class="group">
+                <h2>翻页时间轴</h2>
+                <textarea id="cuePoints">[
+  0,
+  17,
+  39,
+  68,
+  98,
+  126,
+  154,
+  184,
+  215,
+  248,
+  280,
+  312
+]</textarea>
+                <p class="hint">这里是一页对应一个切换时间点，单位是秒。第一个必须是 0，一共 12 个数字，对应 12 页。</p>
+            </div>
+
+            <div class="group">
+                <h2>同步状态</h2>
+                <div class="status-card">
+                    <small>当前页</small>
+                    <strong id="currentSlideNumber">1</strong>
+                    <small>已加载音频：<span id="audioState">否</span></small>
+                </div>
+            </div>
+
+            <p class="hint">浏览器通常不允许页面自动播放带声音的音频，所以第一次必须点“开始播放”。之后这个页面就会像一个视频一样自动走。</p>
+        </aside>
+    </div>
+
+    <audio id="audio"></audio>
+
+    <script>
+        const audio = document.getElementById('audio');
+        const iframe = document.getElementById('slideFrame');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const audioUrlInput = document.getElementById('audioUrl');
+        const audioFileInput = document.getElementById('audioFile');
+        const cuePointsInput = document.getElementById('cuePoints');
+        const timelineFill = document.getElementById('timelineFill');
+        const timeStatus = document.getElementById('timeStatus');
+        const slideStatus = document.getElementById('slideStatus');
+        const currentSlideNumber = document.getElementById('currentSlideNumber');
+        const audioState = document.getElementById('audioState');
+
+        let cues = [];
+        let currentSlide = 0;
+        let objectUrl = null;
+
+        function formatTime(seconds) {
+            const safe = Math.max(0, Math.floor(seconds || 0));
+            const m = String(Math.floor(safe / 60)).padStart(2, '0');
+            const s = String(safe % 60).padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function getController() {
+            return iframe.contentWindow && iframe.contentWindow.__openclawSlides;
+        }
+
+        function parseCuePoints() {
+            try {
+                const parsed = JSON.parse(cuePointsInput.value);
+                if (!Array.isArray(parsed) || !parsed.length || parsed[0] !== 0) {
+                    throw new Error('invalid');
+                }
+                cues = parsed.map((item) => Number(item)).filter((item) => !Number.isNaN(item));
+                localStorage.setItem('openclawPodcastCues', JSON.stringify(cues));
+                return true;
+            } catch (error) {
+                alert('翻页时间轴格式不对，请使用 JSON 数组，例如 [0, 12, 30]');
+                return false;
+            }
+        }
+
+        function syncSlideByTime() {
+            if (!cues.length) return;
+            let target = 0;
+            for (let i = 0; i < cues.length; i += 1) {
+                if (audio.currentTime >= cues[i]) {
+                    target = i;
+                }
+            }
+            if (target !== currentSlide) {
+                currentSlide = target;
+                const controller = getController();
+                if (controller) controller.showSlide(target);
+            }
+            currentSlideNumber.textContent = String(currentSlide + 1);
+            slideStatus.textContent = `第 ${currentSlide + 1} / ${cues.length} 页`;
+        }
+
+        function updateTransport() {
+            const duration = audio.duration || 0;
+            const progress = duration ? (audio.currentTime / duration) * 100 : 0;
+            timelineFill.style.width = `${progress}%`;
+            timeStatus.textContent = `${formatTime(audio.currentTime)} / ${formatTime(duration)}`;
+            syncSlideByTime();
+        }
+
+        function loadAudioFromUrl(url) {
+            if (!url) return;
+            audio.src = url;
+            audio.load();
+            localStorage.setItem('openclawPodcastAudioUrl', url);
+            audioState.textContent = '是';
+        }
+
+        iframe.addEventListener('load', () => {
+            const savedCues = localStorage.getItem('openclawPodcastCues');
+            const savedAudioUrl = localStorage.getItem('openclawPodcastAudioUrl');
+            if (savedCues) cuePointsInput.value = savedCues;
+            if (savedAudioUrl) audioUrlInput.value = savedAudioUrl;
+            parseCuePoints();
+            if (savedAudioUrl) loadAudioFromUrl(savedAudioUrl);
+            const controller = getController();
+            if (controller) {
+                controller.showSlide(0);
+                slideStatus.textContent = `第 1 / ${controller.getSlideCount()} 页`;
+            }
+        });
+
+        audio.addEventListener('timeupdate', updateTransport);
+        audio.addEventListener('loadedmetadata', updateTransport);
+        audio.addEventListener('ended', () => {
+            timelineFill.style.width = '100%';
+        });
+
+        audioUrlInput.addEventListener('change', () => loadAudioFromUrl(audioUrlInput.value.trim()));
+        cuePointsInput.addEventListener('change', parseCuePoints);
+
+        audioFileInput.addEventListener('change', () => {
+            const [file] = audioFileInput.files || [];
+            if (!file) return;
+            if (objectUrl) URL.revokeObjectURL(objectUrl);
+            objectUrl = URL.createObjectURL(file);
+            audio.src = objectUrl;
+            audio.load();
+            audioState.textContent = '是';
+        });
+
+        startBtn.addEventListener('click', async () => {
+            if (!parseCuePoints()) return;
+            if (!audio.src && audioUrlInput.value.trim()) {
+                loadAudioFromUrl(audioUrlInput.value.trim());
+            }
+            if (!audio.src) {
+                alert('先提供音频文件或音频链接。');
+                return;
+            }
+            await audio.play();
+            updateTransport();
+        });
+
+        pauseBtn.addEventListener('click', () => audio.pause());
+
+        restartBtn.addEventListener('click', () => {
+            audio.currentTime = 0;
+            currentSlide = 0;
+            const controller = getController();
+            if (controller) controller.showSlide(0);
+            updateTransport();
+        });
+    </script>
+</body>
+</html>

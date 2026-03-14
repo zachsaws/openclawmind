@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw 演讲项目</title>
+    <style>
+        :root {
+            --bg: #070a14;
+            --panel: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+            --muted: #9aa3b2;
+            --accent: #ff4f4f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Inter, system-ui, sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(255, 79, 79, 0.12), transparent 35%),
+                linear-gradient(180deg, #070a14 0%, #0b1120 100%);
+            color: var(--text);
+            padding: 24px;
+        }
+
+        .shell {
+            width: min(960px, 100%);
+            display: grid;
+            gap: 24px;
+        }
+
+        h1 {
+            font-size: clamp(34px, 5vw, 52px);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+        }
+
+        p.lead {
+            color: var(--muted);
+            font-size: 18px;
+            max-width: 760px;
+            line-height: 1.7;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 79, 79, 0.14);
+            color: #ff8484;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .card h2 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+
+        .card a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .card a:hover {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <div>
+            <h1>OpenClaw 演讲项目</h1>
+            <p class="lead">这里同时提供两种体验：一是纯幻灯片版，适合现场讲演；二是播客视频版，适合音频配合页面自动翻页展示。</p>
+        </div>
+
+        <section class="grid">
+            <article class="card">
+                <div class="tag">Slides</div>
+                <h2>幻灯片版</h2>
+                <p>沉浸式单页翻页，适合投屏演讲。支持键盘和点击左右半屏切换页面。</p>
+                <a href="./openclaw/">打开演讲页 →</a>
+            </article>
+
+            <article class="card">
+                <div class="tag">Podcast</div>
+                <h2>播客视频版</h2>
+                <p>加载音频后自动驱动翻页，适合做成“一条链接就能播放”的演讲视频页面。</p>
+                <a href="./podcast/">打开播客页 →</a>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

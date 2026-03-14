@@ -666,6 +666,14 @@
             slides[currentSlide].classList.add('active');
         }
 
+        window.__openclawSlides = {
+            getSlideCount: () => slides.length,
+            getCurrentSlide: () => currentSlide,
+            showSlide,
+            next: () => showSlide(currentSlide + 1),
+            prev: () => showSlide(currentSlide - 1),
+        };
+
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
                 e.preventDefault();
