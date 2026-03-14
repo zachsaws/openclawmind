@@ -15,6 +15,9 @@
             --border-color: #1e293b;
             --accent-red: #ff4f4f;
             --accent-red-hover: #ff6b6b;
+            --scene-glow: rgba(255, 79, 79, 0.12);
+            --scene-glow-strong: rgba(255, 79, 79, 0.22);
+            --scene-halo: rgba(255, 255, 255, 0.06);
             --text-main: #ffffff;
             --text-muted: #8b949e;
             --font-main: 'Inter', system-ui, -apple-system, sans-serif;
@@ -39,6 +42,8 @@
             margin: 0;
             -webkit-font-smoothing: antialiased;
             background-image:
+                radial-gradient(circle at 50% 0%, var(--scene-glow), transparent 32%),
+                radial-gradient(circle at 14% 18%, var(--scene-halo), transparent 20%),
                 radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.5) 100%, transparent),
                 radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.4) 100%, transparent),
                 radial-gradient(1.5px 1.5px at 70% 30%, rgba(255,255,255,0.6) 100%, transparent),
@@ -46,6 +51,7 @@
                 radial-gradient(2px 2px at 50% 50%, rgba(255,255,255,0.2) 100%, transparent);
             background-size: 100% 100%;
             background-attachment: fixed;
+            transition: background-image 700ms ease, background-color 700ms ease;
         }
 
         .slide-container {
@@ -60,13 +66,52 @@
             border-radius: 16px;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            background: radial-gradient(circle at 50% 0%, rgba(255, 79, 79, 0.05) 0%, var(--bg-dark) 60%);
+            background:
+                radial-gradient(circle at 50% 0%, var(--scene-glow) 0%, transparent 42%),
+                linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)),
+                radial-gradient(circle at 50% 0%, rgba(255, 79, 79, 0.05) 0%, var(--bg-dark) 60%);
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .slide-container::before,
+        .slide-container::after {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 500ms ease, transform 900ms ease;
+        }
+
+        .slide-container::before {
+            inset: -18% auto auto -12%;
+            width: 360px;
+            height: 360px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--scene-glow-strong), transparent 65%);
+            filter: blur(30px);
+            transform: translate3d(-8px, 18px, 0) scale(0.95);
+        }
+
+        .slide-container::after {
+            right: -6%;
+            bottom: -16%;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 68%);
+            filter: blur(40px);
+            transform: translate3d(10px, -12px, 0) scale(0.96);
         }
 
         .slide-container.active {
             display: flex;
             animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .slide-container.active::before,
+        .slide-container.active::after {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
         }
 
         @keyframes fadeIn {
@@ -87,6 +132,38 @@
             justify-content: center;
             position: relative;
             z-index: 2;
+        }
+
+        .slide-container.active .top-brand,
+        .slide-container.active .section-title,
+        .slide-container.active .pill-badge,
+        .slide-container.active .quote-box,
+        .slide-container.active .oc-card,
+        .slide-container.active .timeline-item,
+        .slide-container.active .page-number,
+        .slide-container.active h1,
+        .slide-container.active .subtitle-caps,
+        .slide-container.active .slide-content > p {
+            animation: riseSoft 700ms cubic-bezier(.2,.8,.2,1) both;
+        }
+
+        .slide-container.active .oc-card:nth-of-type(2),
+        .slide-container.active .timeline-item:nth-of-type(2) { animation-delay: .08s; }
+        .slide-container.active .oc-card:nth-of-type(3),
+        .slide-container.active .timeline-item:nth-of-type(3) { animation-delay: .16s; }
+        .slide-container.active .timeline-item:nth-of-type(4) { animation-delay: .24s; }
+
+        @keyframes riseSoft {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(.985);
+                filter: blur(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
         }
 
         .top-brand {
@@ -127,6 +204,16 @@
         .oc-logo {
             width: 40px;
             height: 40px;
+        }
+
+        .hero-mark {
+            animation: heroFloat 5.6s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        @keyframes heroFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.04); }
         }
 
         h1, h2, h3 {
@@ -214,13 +301,31 @@
             border-radius: 12px;
             padding: 30px;
             position: relative;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .oc-card:hover {
             border-color: rgba(255, 79, 79, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.22);
+        }
+
+        .oc-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 38%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .slide-container.active .oc-card::after,
+        .oc-card:hover::after {
+            opacity: 1;
         }
 
         .oc-card h3 {
@@ -274,6 +379,30 @@
             display: flex;
             flex-direction: column;
             gap: 30px;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 39px;
+            top: 6px;
+            bottom: 6px;
+            width: 1px;
+            background: linear-gradient(180deg, rgba(255,79,79,0.55), rgba(255,255,255,0.1));
+            transform-origin: top;
+            transform: scaleY(0.08);
+            opacity: 0;
+        }
+
+        .slide-container.active .timeline::before {
+            opacity: 1;
+            animation: growLine 1s cubic-bezier(.2,.8,.2,1) .12s forwards;
+        }
+
+        @keyframes growLine {
+            from { transform: scaleY(0.08); }
+            to { transform: scaleY(1); }
         }
 
         .timeline-item {
@@ -295,9 +424,22 @@
             align-items: center;
             text-align: center;
         }
+
+        .scene-cover { --scene-glow: rgba(255, 79, 79, 0.16); --scene-glow-strong: rgba(255,79,79,0.26); --scene-halo: rgba(255,255,255,0.08); }
+        .scene-news { --scene-glow: rgba(255, 98, 78, 0.17); --scene-glow-strong: rgba(255,98,78,0.28); --scene-halo: rgba(255,196,166,0.08); }
+        .scene-question { --scene-glow: rgba(242, 111, 92, 0.16); --scene-glow-strong: rgba(242,111,92,0.3); --scene-halo: rgba(255,214,180,0.07); }
+        .scene-history { --scene-glow: rgba(255, 140, 92, 0.14); --scene-glow-strong: rgba(255,140,92,0.24); --scene-halo: rgba(255,223,185,0.06); }
+        .scene-signals { --scene-glow: rgba(255, 96, 126, 0.15); --scene-glow-strong: rgba(255,96,126,0.24); --scene-halo: rgba(255,210,230,0.06); }
+        .scene-anxiety { --scene-glow: rgba(255, 108, 70, 0.18); --scene-glow-strong: rgba(255,108,70,0.28); --scene-halo: rgba(255,211,195,0.06); }
+        .scene-timeline { --scene-glow: rgba(255, 126, 72, 0.15); --scene-glow-strong: rgba(255,126,72,0.22); --scene-halo: rgba(255,235,205,0.05); }
+        .scene-insight { --scene-glow: rgba(255, 164, 76, 0.15); --scene-glow-strong: rgba(255,164,76,0.25); --scene-halo: rgba(255,229,190,0.06); }
+        .scene-opportunity-a { --scene-glow: rgba(255, 110, 96, 0.17); --scene-glow-strong: rgba(255,110,96,0.3); --scene-halo: rgba(255,220,214,0.06); }
+        .scene-opportunity-b { --scene-glow: rgba(250, 101, 126, 0.17); --scene-glow-strong: rgba(250,101,126,0.28); --scene-halo: rgba(255,220,232,0.06); }
+        .scene-opportunity-c { --scene-glow: rgba(245, 96, 74, 0.16); --scene-glow-strong: rgba(245,96,74,0.28); --scene-halo: rgba(255,218,207,0.06); }
+        .scene-finale { --scene-glow: rgba(255, 176, 74, 0.17); --scene-glow-strong: rgba(255,176,74,0.24); --scene-halo: rgba(255,240,200,0.06); }
     </style>
 </head>
-<body>
+<body class="scene-cover">
 
 <svg style="display:none;">
     <defs>
@@ -313,9 +455,9 @@
     </defs>
 </svg>
 
-<div class="slide-container" style="justify-content: center;">
+<div class="slide-container scene-cover" data-scene="scene-cover" style="justify-content: center;">
     <div class="slide-content center-content" style="margin-top: -30px;">
-        <svg class="oc-logo" style="width: 100px; height: 100px; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(255,79,79,0.4));"><use href="#openclaw-mascot"></use></svg>
+        <svg class="oc-logo hero-mark" style="width: 100px; height: 100px; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(255,79,79,0.4));"><use href="#openclaw-mascot"></use></svg>
         <h1>OpenClaw</h1>
         <div class="subtitle-caps">THE AI THAT ACTUALLY DOES THINGS.</div>
         <p style="font-size: 24px; color: var(--text-main); max-width: 800px; margin-top: 30px; line-height: 1.5; font-weight: 500;">
@@ -331,7 +473,7 @@
     <div class="page-number">01 / 12</div>
 </div>
 
-<div class="slide-container">
+<div class="slide-container scene-news" data-scene="scene-news">
     <div class="top-brand">
         <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
         <span>OpenClaw</span>
@@ -369,7 +511,7 @@
     <div class="page-number">02 / 12</div>
 </div>
 
-<div class="slide-container">
+<div class="slide-container scene-question" data-scene="scene-question">
     <div class="top-brand">
         <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
         <span>OpenClaw</span>
@@ -392,7 +534,7 @@
     <div class="page-number">03 / 12</div>
 </div>
 
-<div class="slide-container">
+<div class="slide-container scene-history" data-scene="scene-history">
     <div class="top-brand">
         <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
         <span>OpenClaw</span>
@@ -419,7 +561,7 @@
     <div class="page-number">04 / 12</div>
 </div>
 
-<div class="slide-container">
+<div class="slide-container scene-signals" data-scene="scene-signals">
     <div class="top-brand">
         <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
         <span>OpenClaw</span>
@@ -449,7 +591,7 @@
     <div class="page-number">05 / 12</div>
 </div>
 
-<div class="slide-container">
+<div class="slide-container scene-anxiety" data-scene="scene-anxiety">
     <div class="top-brand">
         <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
         <span>OpenClaw</span>
@@ -482,7 +624,7 @@
     <div class="page-number">06 / 12</div>
 </div>
 
-<div class="slide-container">
+<div class="slide-container scene-timeline" data-scene="scene-timeline">
     <div class="top-brand">
         <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
         <span>OpenClaw</span>
@@ -527,7 +669,7 @@
     <div class="page-number">07 / 12</div>
 </div>
 
-<div class="slide-container">
+<div class="slide-container scene-insight" data-scene="scene-insight">
     <div class="top-brand">
         <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
         <span>OpenClaw</span>
@@ -549,7 +691,7 @@
     <div class="page-number">08 / 12</div>
 </div>
 
-<div class="slide-container">
+<div class="slide-container scene-opportunity-a" data-scene="scene-opportunity-a">
     <div class="top-brand">
         <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
         <span>OpenClaw</span>
@@ -575,7 +717,7 @@
     <div class="page-number">09 / 12</div>
 </div>
 
-<div class="slide-container">
+<div class="slide-container scene-opportunity-b" data-scene="scene-opportunity-b">
     <div class="top-brand">
         <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
         <span>OpenClaw</span>
@@ -600,7 +742,7 @@
     <div class="page-number">10 / 12</div>
 </div>
 
-<div class="slide-container">
+<div class="slide-container scene-opportunity-c" data-scene="scene-opportunity-c">
     <div class="top-brand">
         <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
         <span>OpenClaw</span>
@@ -626,7 +768,7 @@
     <div class="page-number">11 / 12</div>
 </div>
 
-<div class="slide-container">
+<div class="slide-container scene-finale" data-scene="scene-finale">
     <div class="top-brand">
         <svg class="oc-logo"><use href="#openclaw-mascot"></use></svg>
         <span>OpenClaw</span>
@@ -664,6 +806,7 @@
             slides[currentSlide].classList.remove('active');
             currentSlide = index;
             slides[currentSlide].classList.add('active');
+            document.body.className = slides[currentSlide].dataset.scene || '';
         }
 
         window.__openclawSlides = {
