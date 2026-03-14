@@ -308,57 +308,6 @@
             pointer-events: none;
         }
 
-        .chapter-transition {
-            position: absolute;
-            left: 24px;
-            right: 24px;
-            top: 24px;
-            z-index: 4;
-            display: grid;
-            gap: 6px;
-            justify-items: start;
-            padding: 18px 20px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.14);
-            background: linear-gradient(135deg, rgba(8, 12, 24, 0.9), rgba(8, 12, 24, 0.55));
-            backdrop-filter: blur(18px);
-            box-shadow: 0 18px 48px rgba(0,0,0,0.32);
-            transform: translateY(-12px);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .chapter-transition.visible {
-            animation: chapterCardIn 2.4s ease forwards;
-        }
-
-        .chapter-transition small {
-            color: #ff9f9f;
-            font-size: 11px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
-        .chapter-transition strong {
-            font-size: 24px;
-            line-height: 1.1;
-            letter-spacing: -0.03em;
-        }
-
-        .chapter-transition span {
-            color: var(--muted);
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        @keyframes chapterCardIn {
-            0% { opacity: 0; transform: translateY(-12px) scale(0.98); }
-            12% { opacity: 1; transform: translateY(0) scale(1); }
-            78% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-4px) scale(1.01); }
-        }
-
         .flash-overlay {
             position: absolute;
             inset: 0;
@@ -763,11 +712,6 @@
                     <iframe id="slideFrame" src="../openclaw/"></iframe>
                 </div>
                 <div class="flash-overlay" id="flashOverlay"></div>
-                <div class="chapter-transition" id="chapterTransition">
-                    <small id="chapterTransitionIndex">Chapter 01</small>
-                    <strong id="chapterTransitionTitle">封面</strong>
-                    <span id="chapterTransitionMeta">OpenClaw / 开场命题</span>
-                </div>
                 <div class="hero-overlay" id="heroOverlay">
                     <div class="hero-card">
                         <div class="eyebrow" style="justify-self:center;">OpenClaw / Audio Essay</div>
@@ -886,10 +830,6 @@
         const slideStatus = document.getElementById('slideStatus');
         const frameWrap = document.querySelector('.frame-wrap');
         const flashOverlay = document.getElementById('flashOverlay');
-        const chapterTransition = document.getElementById('chapterTransition');
-        const chapterTransitionIndex = document.getElementById('chapterTransitionIndex');
-        const chapterTransitionTitle = document.getElementById('chapterTransitionTitle');
-        const chapterTransitionMeta = document.getElementById('chapterTransitionMeta');
         const chapterList = document.getElementById('chapterList');
         const currentChapterTitle = document.getElementById('currentChapterTitle');
         const currentChapterMeta = document.getElementById('currentChapterMeta');
@@ -967,20 +907,13 @@
         }
 
         function triggerChapterTransition(index) {
-            const chapter = chapters[index] || chapters[0];
-            chapterTransitionIndex.textContent = `Chapter ${String(index + 1).padStart(2, '0')}`;
-            chapterTransitionTitle.textContent = chapter.title;
-            chapterTransitionMeta.textContent = chapter.label;
-            chapterTransition.classList.remove('visible');
             flashOverlay.classList.remove('visible');
-            void chapterTransition.offsetWidth;
-            chapterTransition.classList.add('visible');
+            void flashOverlay.offsetWidth;
             flashOverlay.classList.add('visible');
             if (transitionTimer) clearTimeout(transitionTimer);
             transitionTimer = setTimeout(() => {
-                chapterTransition.classList.remove('visible');
                 flashOverlay.classList.remove('visible');
-            }, 2400);
+            }, 780);
         }
 
         function renderChapters() {
