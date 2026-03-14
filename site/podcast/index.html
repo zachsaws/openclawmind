@@ -249,19 +249,19 @@
                 <h2>翻页时间轴</h2>
                 <textarea id="cuePoints">[
   0,
-  15,
-  105,
-  136,
-  211,
-  286,
-  391,
-  491,
-  551,
-  646,
-  741,
-  840
+  22.9,
+  137.4,
+  160.0,
+  249.7,
+  313.5,
+  430.1,
+  519.7,
+  581.9,
+  674.3,
+  760.1,
+  882.3
 ]</textarea>
-                <p class="hint">这里是一页对应一个切换时间点，单位是秒。第一个必须是 0，一共 12 个数字，对应 12 页。当前默认值已经按这条 15 分 27 秒的播客重排过一版。</p>
+                <p class="hint">这里是一页对应一个切换时间点，单位是秒。第一个必须是 0，一共 12 个数字，对应 12 页。当前默认值已经按本地语音转写结果重新校准，重点修正了新闻段、焦虑段、三个案例段和结尾页的切换点。</p>
             </div>
 
             <div class="group">
@@ -296,7 +296,7 @@
         const defaultAudioUrl = '../assets/openclaw-podcast.mp3';
         const cueStorageKey = 'openclawPodcastCues';
         const cueVersionKey = 'openclawPodcastCuesVersion';
-        const currentCueVersion = 'v2-20260314';
+        const currentCueVersion = 'v3-20260314-transcript';
 
         let cues = [];
         let currentSlide = 0;
