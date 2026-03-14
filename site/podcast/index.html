@@ -139,6 +139,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .chip {
@@ -398,6 +399,21 @@
             color: var(--muted);
         }
 
+        .viewer.is-fullscreen {
+            border-radius: 0;
+            min-height: 100vh;
+        }
+
+        .viewer.is-fullscreen .viewer-top,
+        .viewer.is-fullscreen .viewer-bottom {
+            padding-left: 28px;
+            padding-right: 28px;
+        }
+
+        .viewer.is-fullscreen .frame-wrap {
+            min-height: 0;
+        }
+
         .now-playing {
             display: grid;
             gap: 4px;
@@ -573,6 +589,7 @@
                 </div>
                 <div class="top-actions">
                     <div class="chip live" id="slideStatus">第 1 / 12 页</div>
+                    <button class="btn ghost" id="fullscreenBtn">进入全屏</button>
                     <button class="btn ghost" id="heroToggleBtn">显示封面</button>
                 </div>
             </header>
@@ -680,7 +697,9 @@
         const restartBtn = document.getElementById('restartBtn');
         const overlayStartBtn = document.getElementById('overlayStartBtn');
         const heroToggleBtn = document.getElementById('heroToggleBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
         const heroOverlay = document.getElementById('heroOverlay');
+        const viewer = document.querySelector('.viewer');
         const audioUrlInput = document.getElementById('audioUrl');
         const audioFileInput = document.getElementById('audioFile');
         const cuePointsInput = document.getElementById('cuePoints');
@@ -865,6 +884,12 @@
             localStorage.setItem('openclawPodcastAudioUrl', url);
         }
 
+        function syncFullscreenState() {
+            const isFs = !!document.fullscreenElement;
+            viewer.classList.toggle('is-fullscreen', isFs);
+            fullscreenBtn.textContent = isFs ? '退出全屏' : '进入全屏';
+        }
+
         iframe.addEventListener('load', () => {
             const savedCueVersion = localStorage.getItem(cueVersionKey);
             const savedCues = savedCueVersion === currentCueVersion ? localStorage.getItem(cueStorageKey) : null;
@@ -912,6 +937,17 @@
             heroOverlay.classList.toggle('hidden');
             heroToggleBtn.textContent = heroOverlay.classList.contains('hidden') ? '显示封面' : '隐藏封面';
         });
+
+        fullscreenBtn.addEventListener('click', async () => {
+            if (!document.fullscreenElement) {
+                await viewer.requestFullscreen();
+            } else {
+                await document.exitFullscreen();
+            }
+            syncFullscreenState();
+        });
+
+        document.addEventListener('fullscreenchange', syncFullscreenState);
 
         audioUrlInput.addEventListener('change', () => loadAudioFromUrl(audioUrlInput.value.trim()));
         applyCueBtn.addEventListener('click', parseCuePoints);
